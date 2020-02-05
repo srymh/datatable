@@ -4,13 +4,19 @@ import React from 'react';
 type CellProps = {
   content?: React.ReactNode;
   header?: boolean;
+  fixed?: boolean;
 };
 
 const Cell: React.FC<CellProps> = props => {
+  const fixedClass = props.fixed ? ' Cell-fixed' : '';
+  const headerClass = props.header ? ' Cell-header' : '';
+
+  const className = `Cell${fixedClass}${headerClass}`;
+
   const cellMarkup = props.header ? (
-    <th className="Cell Cell-header">{props.content}</th>
+    <th className={className}>{props.content}</th>
   ) : (
-    <td className="Cell">{props.content}</td>
+    <td className={className}>{props.content}</td>
   );
 
   return cellMarkup;

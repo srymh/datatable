@@ -20,6 +20,7 @@ class DataTable extends React.Component<DataTableProps> {
         key={`heading-${cellIndex}`}
         content={headings[cellIndex]}
         header={true}
+        fixed={cellIndex === 0}
       />
     );
   };
@@ -34,6 +35,7 @@ class DataTable extends React.Component<DataTableProps> {
             <Cell
               key={`${rowIndex}-${cellIndex}`}
               content={rows[rowIndex][cellIndex]}
+              fixed={cellIndex === 0}
             />
           );
         })}
