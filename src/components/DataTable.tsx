@@ -54,10 +54,12 @@ class DataTable extends React.Component<DataTableProps> {
     const tbodyMarkup = rows.map(this.renderRow);
 
     return (
-      <table className="Table">
-        <thead>{theadMarkup}</thead>
-        <tbody>{tbodyMarkup}</tbody>
-      </table>
+      <div className="DataTable">
+        <table className="Table">
+          <thead>{theadMarkup}</thead>
+          <tbody>{tbodyMarkup}</tbody>
+        </table>
+      </div>
     );
   }
 }
