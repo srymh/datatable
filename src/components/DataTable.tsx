@@ -55,10 +55,12 @@ class DataTable extends React.Component<DataTableProps> {
 
     return (
       <div className="DataTable">
-        <table className="Table">
-          <thead>{theadMarkup}</thead>
-          <tbody>{tbodyMarkup}</tbody>
-        </table>
+        <div className="ScrollContainer">
+          <table className="Table">
+            <thead>{theadMarkup}</thead>
+            <tbody>{tbodyMarkup}</tbody>
+          </table>
+        </div>
       </div>
     );
   }

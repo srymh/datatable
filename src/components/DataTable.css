@@ -14,3 +14,7 @@
   padding: 4px;
   text-align: left;
 }
+
+.ScrollContainer {
+  overflow-x: auto;
+}
