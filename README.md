@@ -6,3 +6,4 @@ This is taken from "[Building a Data Table Component in React – Shopify Engine
 - Making it Responsive: Add Max-width
 - Making it Responsive and Readable: Create a Scroll Container
 - Adding Context: Create a Fixed First Column
+- Fixing a Bug: Adjust Cell Heights

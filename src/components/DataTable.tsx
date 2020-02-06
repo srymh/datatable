@@ -11,9 +11,30 @@ type DataTableProps = {
   rows: TableData[][];
 };
 
-class DataTable extends React.Component<DataTableProps> {
-  renderHeadingRow = (_cell: React.ReactNode, cellIndex: number) => {
+type DataTableState = {
+  cellHeights: number[];
+};
+
+class DataTable extends React.Component<DataTableProps, DataTableState> {
+  private tableRef = React.createRef<HTMLTableElement>();
+
+  constructor(props: DataTableProps) {
+    super(props);
+
+    this.state = {
+      cellHeights: [],
+    };
+
+    this.handleCellHeightResize = this.handleCellHeightResize.bind(this);
+  }
+
+  componentDidMount() {
+    this.handleCellHeightResize();
+  }
+
+  private renderHeadingRow = (_cell: React.ReactNode, cellIndex: number) => {
     const { headings } = this.props;
+    const { cellHeights } = this.state;
 
     return (
       <Cell
@@ -21,12 +42,15 @@ class DataTable extends React.Component<DataTableProps> {
         content={headings[cellIndex]}
         header={true}
         fixed={cellIndex === 0}
+        height={cellHeights[0]}
       />
     );
   };
 
-  renderRow = (_row: TableData[], rowIndex: number) => {
+  private renderRow = (_row: TableData[], rowIndex: number) => {
     const { rows } = this.props;
+    const { cellHeights } = this.state;
+    const heightIndex = rowIndex + 1;
 
     return (
       <tr key={`row-${rowIndex}`}>
@@ -36,11 +60,28 @@ class DataTable extends React.Component<DataTableProps> {
               key={`${rowIndex}-${cellIndex}`}
               content={rows[rowIndex][cellIndex]}
               fixed={cellIndex === 0}
+              height={cellHeights[heightIndex]}
             />
           );
         })}
       </tr>
     );
+  };
+
+  private getTallestCellHeights = (): number[] => {
+    const table = this.tableRef.current;
+    if (table !== null) {
+      const rows = Array.from(table.getElementsByTagName('tr'));
+      return rows.map(row => {
+        const fixedCell = row.childNodes[0] as Element;
+        return Math.max(row.clientHeight, fixedCell.clientHeight);
+      });
+    }
+    return [];
+  };
+
+  private handleCellHeightResize = () => {
+    this.setState({ cellHeights: this.getTallestCellHeights() });
   };
 
   render() {
@@ -58,7 +99,7 @@ class DataTable extends React.Component<DataTableProps> {
     return (
       <div className="DataTable">
         <div className="ScrollContainer">
-          <table className="Table">
+          <table className="Table" ref={this.tableRef}>
             <thead>{theadMarkup}</thead>
             <tbody>{tbodyMarkup}</tbody>
           </table>
