@@ -7,3 +7,4 @@ This is taken from "[Building a Data Table Component in React – Shopify Engine
 - Making it Responsive and Readable: Create a Scroll Container
 - Adding Context: Create a Fixed First Column
 - Fixing a Bug: Adjust Cell Heights
+- > We’re close now, and there’s one final bug to solve. The handleCellHeightResize() is called after the component is mounted and is never called again unless the page is refreshed. This means the height values for each cell remain the same even if the window is resized.

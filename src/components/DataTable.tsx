@@ -26,15 +26,22 @@ class DataTable extends React.Component<DataTableProps, DataTableState> {
     };
 
     this.handleCellHeightResize = this.handleCellHeightResize.bind(this);
+    this.handleWindowResize = this.handleWindowResize.bind(this);
   }
 
   componentDidMount() {
     this.handleCellHeightResize();
+    window.addEventListener('resize', this.handleWindowResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleWindowResize);
   }
 
   private renderHeadingRow = (_cell: React.ReactNode, cellIndex: number) => {
     const { headings } = this.props;
     const { cellHeights } = this.state;
+    const height = cellHeights.length > 0 ? cellHeights[0] : undefined;
 
     return (
       <Cell
@@ -42,7 +49,7 @@ class DataTable extends React.Component<DataTableProps, DataTableState> {
         content={headings[cellIndex]}
         header={true}
         fixed={cellIndex === 0}
-        height={cellHeights[0]}
+        height={height}
       />
     );
   };
@@ -51,6 +58,8 @@ class DataTable extends React.Component<DataTableProps, DataTableState> {
     const { rows } = this.props;
     const { cellHeights } = this.state;
     const heightIndex = rowIndex + 1;
+    const height = (heightIndex: number) =>
+      heightIndex < cellHeights.length ? cellHeights[heightIndex] : undefined;
 
     return (
       <tr key={`row-${rowIndex}`}>
@@ -60,7 +69,7 @@ class DataTable extends React.Component<DataTableProps, DataTableState> {
               key={`${rowIndex}-${cellIndex}`}
               content={rows[rowIndex][cellIndex]}
               fixed={cellIndex === 0}
-              height={cellHeights[heightIndex]}
+              height={height(heightIndex)}
             />
           );
         })}
@@ -82,6 +91,13 @@ class DataTable extends React.Component<DataTableProps, DataTableState> {
 
   private handleCellHeightResize = () => {
     this.setState({ cellHeights: this.getTallestCellHeights() });
+  };
+
+  private handleWindowResize = () => {
+    // In order to reduce cell height, clear `this.state.cellHeights`.
+    // If this process is skipped, the height will be only expand without reducing.
+    this.setState({ cellHeights: [] });
+    this.handleCellHeightResize();
   };
 
   render() {
